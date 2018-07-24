@@ -1,0 +1,28 @@
+{
+  "name": "mistqr",
+  "version": "1.0.0",
+  "description": "Scan custom MIST QR codes and track what was scanned",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alisaad012/mistqr.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alisaad012/mistqr/issues"
+  },
+  "homepage": "https://github.com/alisaad012/mistqr#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "hbs": "^4.0.1",
+    "mongoose": "^5.2.5",
+    "mongoose-type-email": "^1.0.9"
+  }
+}

@@ -1,0 +1,8 @@
+      <h2>Articles</h2>
+      <ol>
+      {{#each articles}}
+        <li>
+          <a href="{{this.url}}">{{this.title}}</a> - [<a href="/article/{{this.slug}}">details</a>]
+        </li>
+      {{/each}}
+      </ol>

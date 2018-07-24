@@ -1,0 +1,58 @@
+body {
+    background-color: lightgray;
+}
+
+.center {
+    margin: 0 auto;
+    text-align: center;
+}
+
+hr {
+    display: block;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: auto;
+    margin-right: auto;
+    border-style: inset;
+    border-width: 2px;
+    width: 650px;
+    border-color: black;
+}
+
+#navbar a {
+    padding: 10px;
+    text-decoration: none;
+    background-color: gray;
+    color: white;
+    border-radius: 5px;
+}
+
+#navbar a:hover {
+    background-color: white;
+    color: gray;
+}
+
+#navbar {
+    padding-bottom: 10px;
+}
+
+form {
+    padding-bottom: 20px;
+}
+
+label {
+    width: 180px;
+    display: inline-block;
+    text-align: right;
+    vertical-align: top;
+    padding: 0px 5px 10px 0px;
+}
+
+ol {
+    width: 600px;
+    margin: 0 auto;
+}
+
+li {
+    text-align: left;
+}
