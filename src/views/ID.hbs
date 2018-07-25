@@ -1,0 +1,13 @@
+      <h2>{{ID.id}}</h2>
+      <div>
+        <label for="name">Name:</label> {{ID.name}}
+      </div>
+      <div>
+	    <label for="category">Category:</label> {{ID.category}}
+	  </div>
+	  <strong>Scan Times</strong>
+	  <ol>
+	  {{#each ID.scans}}
+	    <li>{{this}}</li>
+	  {{/each}}
+	  </ol>

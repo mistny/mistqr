@@ -3,49 +3,53 @@ const mongoose = require('mongoose');
 
 const User = mongoose.model('User');
 
-function register(username, email, password, errorCallback, successCallback) {
-    if(username.length < 8 || password.length < 8) {
-        console.log("USERNAME PASSWORD TOO SHORT");
-        errorCallback({message: "USERNAME PASSWORD TOO SHORT"});
+function register(email, password, errorCallback, successCallback) {
+    if(password.length < 8) {
+        console.log("PASSWORD TOO SHORT");
+        errorCallback({message: "Password is too short."});
     } else {
-        User.findOne({username: username}, (err, user) => {
+        /* Find if the email (case-insensitive) already has an account */
+        User.findOne({email: {'$regex': "^"+req.query.professor+"$", $options:'i'}}, (err, user) => {
             if (err) {
                 console.log(err);
-            }
-            if (user) {
-                console.log("USERNAME ALREADY EXISTS");
-                errorCallback({message: "USERNAME ALREADY EXISTS"});
             } else {
-                bcrypt.hash(password, 10, function(err, hash) {
-                    if (err) {
-                        console.log(err);
-                    }
-                    new User({
-			username: username,
-			email: email,
-			password: hash,
-                    }).save((err, savedUser) => {
+                if (user) {
+                    console.log("USERNAME ALREADY EXISTS");
+                    errorCallback({message: "Email already has an account."});
+                } else {
+                    bcrypt.hash(password, 10, function(err, hash) {
                         if (err) {
                             console.log(err);
-                            errorCallback({message: "DOCUMENT SAVE ERROR"});
                         } else {
-                            successCallback(savedUser);
+                            new User({
+                                email: email,
+                                password: hash,
+                                rank: "None",
+                                dateCreated: new Date();
+                            }).save((err, savedUser) => {
+                                if (err) {
+                                    console.log(err);
+                                    errorCallback({message: "Error please try again later"});
+                                } else {
+                                    successCallback(savedUser);
+                                }
+                            });
                         }
                     });
-                });
+                }
             }
         });
     }
 }
 
-function login(username, password, errorCallback, successCallback) {
-    User.findOne({username: username}, (err, user) => {
+function login(email, password, errorCallback, successCallback) {
+    User.findOne({email: email}, (err, user) => {
         if (err) {
             console.log(err);
         }
         if (!user) {
             console.log("USER NOT FOUND");
-            errorCallback({message: "USER NOT FOUND"});
+            errorCallback({message: "Email or password is incorrect."});
         } else {
             bcrypt.compare(password, user.password, (err, passwordMatch) => {
                 if (err) {
@@ -55,7 +59,7 @@ function login(username, password, errorCallback, successCallback) {
                     successCallback(user);
                 } else {
                     console.log("PASSWORDS DO NOT MATCH");
-                    errorCallback({message: "PASSWORDS DO NOT MATCH"});
+                    errorCallback({message: "Email or password is incorrect."});
                 }
             });
         }
@@ -73,10 +77,7 @@ function startAuthenticatedSession(req, user, cb) {
 }
 
 module.exports = {
-startAuthenticatedSession:
-    startAuthenticatedSession,
-register:
-    register,
-login:
-    login
+    startAuthenticatedSession: startAuthenticatedSession,
+    register: register,
+    login: login
 };

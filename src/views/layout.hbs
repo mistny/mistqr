@@ -2,27 +2,28 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Linky Linky</title>
+    <title>MIST QR</title>
     <link rel="stylesheet" href="/css/site.css" type="text/css" media="screen" title="no title" charset="utf-8">
   </head>
   <body>
     <div class="center">
-      <h1>Linky Linky</h1>
+      <h1>MIST QR</h1>
       <div id="navbar">
         <a href="/">Home</a>
-	{{#if user}}
-        <a href="/article/add">Add Article</a>
-	{{else}}
+	{{#if privilege}}
+        <a href="/stats">Stats</a>
+	{{/if}}
+	{{#unless user}}
         <a href="/login">Login</a>
         <a href="/register">Register</a>
-	{{/if}}
+	{{/unless}}
       </div>
       <hr>
 {{{body}}}
       <hr>
       {{#if user}}
       <div id="username">
-        <a href="/{{user.username}}">{{user.username}}</a>
+        Signed in as {{user.email}}.  Not you?  <a href="/logout">Logout</a>
       </div>
       {{/if}}
     </div>
