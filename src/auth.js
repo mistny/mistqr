@@ -1,6 +1,8 @@
+'use strict';
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
-
+const path = require('path');
+require(path.join(__dirname, 'db'));
 const User = mongoose.model('User');
 
 function register(email, password, errorCallback, successCallback) {
@@ -9,7 +11,7 @@ function register(email, password, errorCallback, successCallback) {
         errorCallback({message: "Password is too short."});
     } else {
         /* Find if the email (case-insensitive) already has an account */
-        User.findOne({email: {'$regex': "^"+req.query.professor+"$", $options:'i'}}, (err, user) => {
+        User.findOne({email: email}, (err, user) => {
             if (err) {
                 console.log(err);
             } else {
@@ -24,8 +26,8 @@ function register(email, password, errorCallback, successCallback) {
                             new User({
                                 email: email,
                                 password: hash,
-                                rank: "None",
-                                dateCreated: new Date();
+                                role: "None",
+                                dateCreated: new Date()
                             }).save((err, savedUser) => {
                                 if (err) {
                                     console.log(err);

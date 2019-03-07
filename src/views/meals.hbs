@@ -1,0 +1,7 @@
+      <h2>Meals</h2>
+      <ol>
+      {{#each meals}}
+        <li><a href="/meals/{{this.slug}}">{{this.name}}</a></li>
+      {{/each}}
+      </ol>
+      <a href="/addMeal">Add Meal</a>

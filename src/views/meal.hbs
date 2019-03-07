@@ -1,0 +1,42 @@
+      <h2>Meal</h2>
+      <div>
+        <label for="name">Name:</label>
+        <label class="details">{{meal.name}}</label>
+      </div>
+      <div>
+        <label for="start">Start at:</label>
+        <label class="details">{{meal.start}}</label>
+      </div>
+      <div>
+        <label for="end">Ends at:</label>
+        <label class="details">{{meal.end}}</label>
+      </div>
+      <div>
+        <button class="collapsible">See scanned ID's</button>
+        <div class="content">
+          <ol>
+          {{#each meal.scanned}}
+            <li><a href="/ids/{{this}}">{{this}}</a></li>
+          {{/each}}
+          </ol>
+        </div>
+      </div>
+      <div>
+        <form method="post">
+          <input type="checkbox" name="remove" value="{{meal.slug}}">
+          Delete this meal?  This action cannot be undone.
+          <input type="submit" value="Delete Permanently">
+        </form>
+      </div>
+      <script>
+        const button = document.querySelector('button');
+        button.addEventListener('click', function toggleCollapse() {
+          this.classList.toggle('active');
+          const content = this.nextElementSibling;
+          if (content.style.maxHeight){
+            content.style.maxHeight = null;
+          } else {
+            content.style.maxHeight = content.scrollHeight + 'px';
+          } 
+        });
+      </script>

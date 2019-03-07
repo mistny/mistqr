@@ -1,0 +1,18 @@
+      <h2>Add ID's to Database</h2>
+      {{#if message}}
+      <div class="error">{{message}}</div>
+      {{/if}}
+      <form method="POST" action="add">
+        <div>
+          Category:
+          <label class="radio"><input type="radio" name="category" value="Competitor">Competitor</input></label>
+          <label class="radio"><input type="radio" name="category" value="Coach">Coach</input></label>
+        </div>
+        <div>
+          <div>Type ID, name pairs separated by comma or tab, each pair on a line.</div>
+          <br>
+          <textarea name="ids">ID	Name
+ID, Name</textarea>
+        </div>
+        <div><input type="submit" value="Register"></div>
+      </form>

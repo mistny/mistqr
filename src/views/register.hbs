@@ -2,14 +2,14 @@
 {{#if message}}
 <div class="error">{{ message }}</div>
 {{/if}}
-<form method="POST" action="register">
-	<div>
-		<label for="email">Email:</label> 
-		<input type="email" name="email" value="">
-	</div>
-	<div>
-		<label for="password">Password (at least 8 characters):</label>
-		<input type="password" name="password" value="">
-	</div>
-	<div><input type="submit" value="Register"></div>
+<form method="POST">
+    <div>
+        <label for="email">Email:</label> 
+        <input type="email" name="email" required autofocus>
+    </div>
+    <div>
+        <label for="password">Password (at least 8 characters):</label>
+        <input type="password" name="password" required>
+    </div>
+    <div><input type="submit" value="Register"></div>
 </form>

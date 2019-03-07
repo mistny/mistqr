@@ -1,0 +1,21 @@
+      {{#if id}}
+      <h2>{{id.id}}</h2>
+      <div>
+        <label for="name">Name:</label>
+        <label class="details">{{id.name}}</label>
+      </div>
+      <div>
+        <label for="category">Category:</label>
+        <label class="details">{{id.category}}</label>
+      </div>
+      <strong>Scan Times</strong>
+      <ol>
+      {{#each id.scans}}
+        <li>{{this}}</li>
+      {{/each}}
+      </ol>
+      {{else}}
+      {{#if message}}
+      <h2>{{message}}</h2>
+      {{/if}}
+      {{/if}}

@@ -1,0 +1,44 @@
+      <h2>Users</h2>
+      {{#if message}}
+      <div class="error">{{message}}</div>
+      {{/if}}
+      <form method="post">
+        <div class="user-role-title">
+          <strong>Users that have not been made scanners yet.</strong>
+        </div>
+        {{#unless users}}
+        <div class="no-members">No other users</div>
+        {{/unless}}
+        <ol>
+        {{#each users}}
+          <li>
+            <label class="user">
+              {{this.email}} <input type="checkbox" name="users" value="{{this.email}}">
+            </label>
+          </li>
+        {{/each}}
+        </ol>
+        <input type="submit" value="Make selected users Scanners">
+      </form>
+      <div class="user-role-title">
+        <strong>Registered Scanners</strong>
+      </div>
+      {{#unless scanners}}
+      <div class="no-members">No other Scanners</div>
+      {{/unless}}
+      <ol>
+      {{#each scanners}}
+        <li>{{this.email}}</li>
+      {{/each}}
+      </ol>
+      <div class="user-role-title">
+        <strong>Admins</strong>
+      </div>
+      {{#unless admins}}
+      <div class="no-members">No other Admins</div>
+      {{/unless}}
+      <ol>
+      {{#each admins}}
+        <li>{{this.email}}</li>
+      {{/each}}
+      </ol>

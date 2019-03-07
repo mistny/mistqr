@@ -1,0 +1,24 @@
+      <h2>Add Meal</h2>
+      {{#if message}}
+      <div class="error">{{message}}</div>
+      {{/if}}
+      <form method="post">
+        <div>
+          <label for="name">Name of meal (ex. Friday Dinner):</label>
+          <input type="text" name="name" required autofocus>
+        </div>
+        <div>
+          Precise times are not important.  More important is that meal times not overlap.
+        </div>
+        <div>
+          <label for="start">Start time:</label>
+          <input type="datetime-local" name="start" required>
+        </div>
+        <div>
+          <label for="end">End time:</label>
+          <input type="datetime-local" name="end" required>
+        </div>
+        <div>
+          <input type="submit" value="Add Meal">
+        </div>
+      </form>
