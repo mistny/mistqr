@@ -38,7 +38,8 @@ app.use((req, res, next) => {
 });
 
 app.get('/', (req, res) => {
-    res.render('index', {message: "Scan custom MIST QR codes and track what was scanned."});
+    // res.render('index', {message: "Scan custom MIST QR codes and track what was scanned."});
+    res.redirect('https://nymist.com');
 });
 
 app.get('/ids', (req, res) => {
