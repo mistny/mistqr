@@ -4,6 +4,8 @@ const session = require('express-session');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
 const path = require('path');
+const GoogleSpreadsheet = require('google-spreadsheet');
+const async = require('async');
 
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').load();
@@ -28,7 +30,8 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    store: new MongoStore({mongooseConnection: db.connection})
+    store: new MongoStore({mongooseConnection: db.connection}),
+    expires: new Date(Date.now() + (3 * 86400 * 1000))
 }));
 
 app.use((req, res, next) => {
@@ -40,6 +43,117 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
     // res.render('index', {message: "Scan custom MIST QR codes and track what was scanned."});
     res.redirect('https://nymist.com');
+});
+
+app.get('/4093F093H4G03U8', (req, res) => {
+    req.session.user = '2019';
+    res.render('index', {message: "Successfully signed in."});
+});
+
+app.get('/code/:code', (req, res) => {
+    if (req.session.user === '2019') {
+        const doc = new GoogleSpreadsheet('1lDLo01Kp1cdhROlpfvwcp3ZXZWIftu6A5Pvr11xWOMc');
+        let sheet;
+        async.series([
+            function setAuth(step) {
+                var creds = require('./mistqr_spreadsheet_credentials.json');
+                doc.useServiceAccountAuth(creds, step);
+            },
+            function getInfoAndWorksheets(step) {
+                doc.getInfo(function(err, info) {
+                    sheet = info.worksheets[0];
+                    step();
+                });
+            },
+            function workingWithRows(step) {
+                sheet.getRows({
+                  offset: 1,
+                  orderby: 'col2'
+                }, function( err, rows ){
+                    let qrFound = false;
+                    for (let i = 0; i < rows.length; i++) {
+                        const row = rows[i];
+                        if (row.qr === req.params.code) {
+                            qrFound = true;
+                            const data = {
+                                layout: false,
+                                qr: row.qr, 
+                                name: row.name, 
+                                mistid: row.mistid, 
+                                sigsheet: row.sigsheet, 
+                                present: row.present
+                            };
+                            console.log(data);
+                            if (row.sigsheet === '1') {
+                                if (row.present === '1') {
+                                    res.render('presentHas', data);
+                                } else {
+                                    res.render('absentHas', data);
+                                }
+                            } else {
+                                if (row.present === '1') {
+                                    res.render('presentMissing', data);
+                                } else {
+                                    res.render('absentMissing', data);
+                                }
+                            }
+                            break;
+                        }
+                    }
+                    if (!qrFound) {
+                        res.render('index', {message: `Badge ${req.params.code} not found`});
+                    }
+                    step();
+                });
+            }
+        ]);
+    } else {
+        res.redirect('https://nymist.com');
+    }
+});
+
+app.post('/code/:code', (req, res) => {
+    if (req.session.user) {
+        const doc = new GoogleSpreadsheet('1lDLo01Kp1cdhROlpfvwcp3ZXZWIftu6A5Pvr11xWOMc');
+        let sheet;
+        async.series([
+            function setAuth(step) {
+                var creds = require('./mistqr_spreadsheet_credentials.json');
+                doc.useServiceAccountAuth(creds, step);
+            },
+            function getInfoAndWorksheets(step) {
+                doc.getInfo(function(err, info) {
+                    sheet = info.worksheets[0];
+                    step();
+                });
+            },
+            function workingWithRows(step) {
+                sheet.getRows({
+                  offset: 1,
+                  orderby: 'col2'
+                }, function( err, rows ){
+                    console.log('Read '+rows.length+' rows');
+                    let qrFound = false;
+                    for (let i = 0; i < rows.length; i++) {
+                        const row = rows[i];
+                        if (row.qr === req.params.code) {
+                            qrFound = true;
+                            row.present = 1;
+                            row.save();
+                            res.render('index', {message: `${row.name} marked as present.`});
+                            break;
+                        }
+                    }
+                    if (!qrFound) {
+                        res.render('index', {message: `Badge ${req.params.code} not found`});
+                    }
+                    step();
+                });
+            }
+        ]);
+    } else {
+        res.redirect('https://nymist.com');
+    }
 });
 
 app.get('/ids', (req, res) => {
@@ -323,7 +437,8 @@ app.get('/logout', (req, res) => {
         if (err) {
             console.log(err);
         }
-        res.redirect('/');
+        res.render('index', {message: "Signed out."});
+        // res.redirect('/');
     });
 });
 
